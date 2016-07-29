@@ -1,5 +1,5 @@
 {
-  "name": "kml-split",
+  "name": "@mapbox/kml-split",
   "version": "0.0.1",
   "description": "Split KML files with many layers into separate files",
   "main": "index.js",
