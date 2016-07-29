@@ -1,12 +1,17 @@
 'use strict';
 
 var gdal = require('gdal');
+var path = require('path');
 
 function kmlSplit(file, options, callback) {
+
+  if (!callback && typeof options === 'function') {
+    var callback = options;
+  }
+
   var paths = file.split('/');
-  var sourceName = paths[paths.length-1].replace('.kml', '');
+  var sourceName = path.basename(file, '.kml');
   var outDir = options.outDir || file.replace(paths[paths.length-1], '');
-  var options = options || {};
   var maxLayers = options.maxLayers || 15;
 
   var datasource;
@@ -21,15 +26,17 @@ function kmlSplit(file, options, callback) {
   var layerCount = datasource.layers.count();
   if (layerCount < 1) {
     datasource.close();
-    return callback('KML does not contain any layers.');
+    return callback(new Error('KML does not contain any layers.'));
   }
   if (layerCount <= maxLayers) {
     datasource.close();
-    return callback('Maximum layers is larger than layer count. Nothing to do.');
+    return callback(new Error('Maximum layers is larger than layer count. Nothing to do.'));
   }
 
+  var files = [];
   var sinkCount = 1;
   var datasink = createSink(outDir, sourceName, sinkCount);
+  files.push(sinkName(outDir, sourceName, sinkCount));
   var count = 1;
   datasource.layers.forEach(function(layer) {
     var name = layer.name;
@@ -50,6 +57,7 @@ function kmlSplit(file, options, callback) {
 
     if (count !== 1 && count % maxLayers === 0) {
       sinkCount++;
+      files.push(sinkName(outDir, sourceName, sinkCount));
       datasink.flush();
       datasink.close();
       datasink = null;
@@ -66,11 +74,15 @@ function kmlSplit(file, options, callback) {
   });
 
   datasource.close();
-  return callback(null, layerCount);
+  return callback(null, files);
+}
+
+function sinkName(out, name, count) {
+  return path.join(out, name + '-' + count + '.kml');
 }
 
 function createSink(out, name, count) {
-  return gdal.open(out+'/'+name+'-'+count+'.kml', 'w', 'KML');
+  return gdal.open(sinkName(out, name, count), 'w', 'KML');
 }
 
 module.exports = kmlSplit;
