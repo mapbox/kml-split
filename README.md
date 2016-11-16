@@ -8,10 +8,10 @@ Split KML files with many layers into separate files. Go from `1 KML file with 2
 
 ```
 # package.json
-npm install kml-split --save
+npm install @mapbox/kml-split --save
 
 # globally
-npm install kml-split -g
+npm install @mapbox/kml-split -g
 ```
 
 ### `kmlSplit(file, options, callback)`
