@@ -2,6 +2,8 @@
 
 Split KML files with many layers into separate files. Go from `1 KML file with 20 layers` to `4 KML files with 5 layers`. Uses Node GDAL to read KML sources and create KML sinks.
 
+[![Build Status](https://travis-ci.com/mapbox/kml-split.svg?branch=master)](https://travis-ci.com/mapbox/kml-split)
+
 # Usage
 
 ### Install
