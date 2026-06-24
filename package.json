@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/kml-split",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Split KML files with many layers into separate files",
   "main": "index.js",
   "scripts": {
@@ -18,5 +18,8 @@
   "devDependencies": {
     "rimraf": "^2.5.4",
     "tape": "^4.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
